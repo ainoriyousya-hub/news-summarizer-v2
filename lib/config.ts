@@ -19,6 +19,8 @@ export const DISPLAY_TABS: Array<{ id: DisplayTabId; label: string }> = [
 ];
 
 // ニュースソースはここだけを見れば追加・削除できるように集約しています。
+// カテゴリ2は「経済専用 RSS が確認できるものだけ」を採用し、
+// 総合系 RSS はカテゴリ3に寄せて混在を防ぎます。
 export const NEWS_CATEGORIES: NewsCategoryConfig[] = [
   {
     id: "reuters-economy",
@@ -66,24 +68,6 @@ export const NEWS_CATEGORIES: NewsCategoryConfig[] = [
         id: "yahoo-business",
         name: "Yahoo!ニュース経済",
         url: "https://news.yahoo.co.jp/rss/topics/business.xml",
-        language: "ja",
-      },
-      {
-        id: "mainichi-flash-economy",
-        name: "毎日新聞",
-        url: "https://mainichi.jp/rss/etc/mainichi-flash.rss",
-        language: "ja",
-      },
-      {
-        id: "47news-economy",
-        name: "共同通信",
-        url: "https://www.47news.jp/47news.rss",
-        language: "ja",
-      },
-      {
-        id: "jiji-ranking-economy",
-        name: "時事通信",
-        url: "https://www.jiji.com/rss/ranking.rdf",
         language: "ja",
       },
     ],
