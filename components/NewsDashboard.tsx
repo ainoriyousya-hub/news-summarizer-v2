@@ -4,9 +4,19 @@ import { useEffect, useMemo, useState } from "react";
 import { DateSelector } from "@/components/DateSelector";
 import { NewsCard } from "@/components/NewsCard";
 import { TabPanel } from "@/components/TabPanel";
-import { APP_DESCRIPTION, APP_NAME, DISPLAY_TABS, NEWS_CATEGORIES } from "@/lib/config";
+import {
+  APP_DESCRIPTION,
+  APP_NAME,
+  DISPLAY_TABS,
+  NEWS_CATEGORIES,
+} from "@/lib/config";
 import { formatDisplayDate, toJstDateString } from "@/lib/date";
-import { CategoryNews, DailyNewsData, DisplayTabId, NewsCategoryId } from "@/lib/types";
+import {
+  CategoryNews,
+  DailyNewsData,
+  DisplayTabId,
+  NewsCategoryId,
+} from "@/lib/types";
 
 type NewsDashboardProps = {
   isAdmin: boolean;
@@ -15,6 +25,13 @@ type NewsDashboardProps = {
 type NewsApiResponse = {
   data: DailyNewsData | null;
   message?: string;
+  error?: string;
+};
+
+type CollectApiResponse = {
+  message?: string;
+  error?: string;
+  date?: string;
 };
 
 const CATEGORY_TABS = NEWS_CATEGORIES.map((category) => ({
@@ -22,7 +39,7 @@ const CATEGORY_TABS = NEWS_CATEGORIES.map((category) => ({
   label: category.label,
 }));
 
-const INITIAL_DATE = toJstDateString();
+const TODAY = toJstDateString();
 
 function LoadingMessage() {
   return (
@@ -41,7 +58,7 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
-  const [selectedDate, setSelectedDate] = useState(INITIAL_DATE);
+  const [selectedDate, setSelectedDate] = useState(TODAY);
   const [selectedCategoryId, setSelectedCategoryId] =
     useState<NewsCategoryId>("reuters-economy");
   const [selectedTabId, setSelectedTabId] = useState<DisplayTabId>("headlines");
@@ -53,7 +70,7 @@ export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
   const [errorMessage, setErrorMessage] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // 日付変更と手動収集後の再読込を同じ処理に寄せています。
+  // 公開画面と管理画面の両方で同じ取得処理を使い、手動収集後も再読込できます。
   useEffect(() => {
     let active = true;
 
@@ -65,7 +82,7 @@ export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
         const response = await fetch(`/api/news?date=${selectedDate}`, {
           cache: "no-store",
         });
-        const payload = (await response.json()) as NewsApiResponse & { error?: string };
+        const payload = (await response.json()) as NewsApiResponse;
 
         if (!response.ok) {
           throw new Error(payload.error ?? "ニュースデータの取得に失敗しました。");
@@ -118,17 +135,13 @@ export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
       const response = await fetch("/api/collect", {
         method: "POST",
       });
-      const payload = (await response.json()) as {
-        error?: string;
-        message?: string;
-        date?: string;
-      };
+      const payload = (await response.json()) as CollectApiResponse;
 
       if (!response.ok) {
         throw new Error(payload.error ?? "手動収集に失敗しました。");
       }
 
-      const collectedDate = payload.date ?? INITIAL_DATE;
+      const collectedDate = payload.date ?? TODAY;
       setSelectedDate(collectedDate);
       setStatusMessage(payload.message ?? "ニュースを収集しました。");
       setInfoMessage("");
@@ -161,21 +174,21 @@ export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
           <div className="flex flex-col gap-3 sm:flex-row">
             <DateSelector
               value={selectedDate}
-              max={INITIAL_DATE}
+              max={TODAY}
               disabled={isLoading || isCollecting}
               onChange={setSelectedDate}
             />
 
-            {isAdmin ? (
+            {isAdmin && (
               <button
                 type="button"
                 onClick={handleManualCollect}
                 disabled={isCollecting}
                 className="rounded-2xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200"
               >
-                {isCollecting ? "収集中..." : "今すぐ収集する"}
+                {isCollecting ? "収集中..." : "今日のニュースを収集"}
               </button>
-            ) : null}
+            )}
           </div>
         </div>
 
