@@ -1,5 +1,5 @@
 import { NewsDashboard } from "@/components/NewsDashboard";
 
 export default function PublicPage() {
-  return <NewsDashboard />;
+  return <NewsDashboard isAdmin={false} />;
 }

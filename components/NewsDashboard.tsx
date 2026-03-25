@@ -9,7 +9,7 @@ import { formatDisplayDate, toJstDateString } from "@/lib/date";
 import { CategoryNews, DailyNewsData, DisplayTabId, NewsCategoryId } from "@/lib/types";
 
 type NewsDashboardProps = {
-  isAdmin?: boolean;
+  isAdmin: boolean;
 };
 
 type NewsApiResponse = {
@@ -40,7 +40,7 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-export function NewsDashboard({ isAdmin = false }: NewsDashboardProps) {
+export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
   const [selectedDate, setSelectedDate] = useState(INITIAL_DATE);
   const [selectedCategoryId, setSelectedCategoryId] =
     useState<NewsCategoryId>("reuters-economy");
