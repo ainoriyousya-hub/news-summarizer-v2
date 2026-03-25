@@ -7,10 +7,10 @@ import {
 } from "@/lib/config";
 import { isSameJstDate } from "@/lib/date";
 import {
+  CategoryFilterRule,
   CollectedArticle,
   FeedSource,
   NewsCategoryConfig,
-  CategoryFilterRule,
 } from "@/lib/types";
 
 type ParsedItem = {
@@ -82,12 +82,15 @@ function matchesCategoryFilter(
   }
 
   const haystack = `${article.title} ${article.content}`.toLowerCase();
-  const hasIncludeMatch = filterRule.includeKeywords.some((keyword) =>
-    haystack.includes(keyword.toLowerCase()),
-  );
 
-  if (!hasIncludeMatch) {
-    return false;
+  if (filterRule.includeKeywords?.length) {
+    const hasIncludeMatch = filterRule.includeKeywords.some((keyword) =>
+      haystack.includes(keyword.toLowerCase()),
+    );
+
+    if (!hasIncludeMatch) {
+      return false;
+    }
   }
 
   if (!filterRule.excludeKeywords?.length) {

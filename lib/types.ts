@@ -21,7 +21,7 @@ export type FeedSource = {
 };
 
 export type CategoryFilterRule = {
-  includeKeywords: string[];
+  includeKeywords?: string[];
   excludeKeywords?: string[];
 };
 

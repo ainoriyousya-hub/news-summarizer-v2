@@ -6,7 +6,7 @@ export const APP_DESCRIPTION =
 export const TIME_ZONE = "Asia/Tokyo";
 export const AI_MODEL = "claude-haiku-4-5-20251001";
 export const MAX_ITEMS_PER_SOURCE = 5;
-export const MAX_ITEMS_PER_CATEGORY = 8;
+export const MAX_ITEMS_PER_CATEGORY = 20;
 export const MAX_CONTENT_LENGTH = 1800;
 
 export const DISPLAY_TABS: Array<{ id: DisplayTabId; label: string }> = [
@@ -71,13 +71,16 @@ const GENERAL_EXCLUDE_FOR_ECONOMY = [
   "野球",
   "芸能",
   "エンタメ",
-  "事件",
-  "事故",
   "天気",
   "将棋",
+  "甲子園",
+  "五輪",
+  "ドラマ",
+  "アイドル",
 ];
 
 // ニュースソースはここだけを見れば追加・削除できるように集約しています。
+// 共同通信の economy.rss は 2026-03-26 時点で 404 を返したため、いったん除外しています。
 export const NEWS_CATEGORIES: NewsCategoryConfig[] = [
   {
     id: "reuters-economy",
@@ -112,7 +115,6 @@ export const NEWS_CATEGORIES: NewsCategoryConfig[] = [
     label: "日本各紙経済",
     description: "日本の経済関連ニュースを媒体横断で一覧できます。",
     filterRule: {
-      includeKeywords: ECONOMY_KEYWORDS,
       excludeKeywords: GENERAL_EXCLUDE_FOR_ECONOMY,
     },
     sources: [
@@ -163,12 +165,6 @@ export const NEWS_CATEGORIES: NewsCategoryConfig[] = [
         id: "mainichi-flash-general",
         name: "毎日新聞",
         url: "https://mainichi.jp/rss/etc/mainichi-flash.rss",
-        language: "ja",
-      },
-      {
-        id: "47news-general",
-        name: "共同通信",
-        url: "https://www.47news.jp/47news.rss",
         language: "ja",
       },
       {
