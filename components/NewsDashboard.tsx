@@ -58,6 +58,7 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
+  const shouldShowCollectButton = isAdmin === true;
   const [selectedDate, setSelectedDate] = useState(TODAY);
   const [selectedCategoryId, setSelectedCategoryId] =
     useState<NewsCategoryId>("reuters-economy");
@@ -179,7 +180,7 @@ export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
               onChange={setSelectedDate}
             />
 
-            {isAdmin && (
+            {shouldShowCollectButton ? (
               <button
                 type="button"
                 onClick={handleManualCollect}
@@ -188,7 +189,7 @@ export function NewsDashboard({ isAdmin }: NewsDashboardProps) {
               >
                 {isCollecting ? "収集中..." : "今日のニュースを収集"}
               </button>
-            )}
+            ) : null}
           </div>
         </div>
 
