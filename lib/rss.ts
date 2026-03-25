@@ -6,7 +6,12 @@ import {
   NEWS_CATEGORIES,
 } from "@/lib/config";
 import { isSameJstDate } from "@/lib/date";
-import { CollectedArticle, FeedSource, NewsCategoryConfig } from "@/lib/types";
+import {
+  CollectedArticle,
+  FeedSource,
+  NewsCategoryConfig,
+  CategoryFilterRule,
+} from "@/lib/types";
 
 type ParsedItem = {
   guid?: string;
@@ -68,6 +73,32 @@ function toCollectedArticle(
   };
 }
 
+function matchesCategoryFilter(
+  article: CollectedArticle,
+  filterRule: CategoryFilterRule | undefined,
+) {
+  if (!filterRule) {
+    return true;
+  }
+
+  const haystack = `${article.title} ${article.content}`.toLowerCase();
+  const hasIncludeMatch = filterRule.includeKeywords.some((keyword) =>
+    haystack.includes(keyword.toLowerCase()),
+  );
+
+  if (!hasIncludeMatch) {
+    return false;
+  }
+
+  if (!filterRule.excludeKeywords?.length) {
+    return true;
+  }
+
+  return !filterRule.excludeKeywords.some((keyword) =>
+    haystack.includes(keyword.toLowerCase()),
+  );
+}
+
 async function fetchSourceArticles(
   category: NewsCategoryConfig,
   source: FeedSource,
@@ -82,6 +113,7 @@ async function fetchSourceArticles(
       .filter((article) =>
         article.publishedAt ? isSameJstDate(article.publishedAt, targetDate) : true,
       )
+      .filter((article) => matchesCategoryFilter(article, category.filterRule))
       .slice(0, MAX_ITEMS_PER_SOURCE);
   } catch (error) {
     console.error("RSS フィードの取得に失敗しました。", {

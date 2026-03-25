@@ -20,11 +20,17 @@ export type FeedSource = {
   language: SupportedLanguage;
 };
 
+export type CategoryFilterRule = {
+  includeKeywords: string[];
+  excludeKeywords?: string[];
+};
+
 export type NewsCategoryConfig = {
   id: NewsCategoryId;
   label: string;
   description: string;
   sources: FeedSource[];
+  filterRule?: CategoryFilterRule;
 };
 
 export type CollectedArticle = {

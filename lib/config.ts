@@ -18,14 +18,74 @@ export const DISPLAY_TABS: Array<{ id: DisplayTabId; label: string }> = [
   { id: "column", label: "コラム" },
 ];
 
+const ECONOMY_KEYWORDS = [
+  "経済",
+  "ビジネス",
+  "金融",
+  "市場",
+  "株",
+  "株価",
+  "為替",
+  "円安",
+  "円高",
+  "物価",
+  "インフレ",
+  "デフレ",
+  "金利",
+  "日銀",
+  "FRB",
+  "企業",
+  "決算",
+  "業績",
+  "売上",
+  "投資",
+  "貿易",
+  "関税",
+  "景気",
+  "GDP",
+  "雇用",
+  "賃上げ",
+  "消費",
+  "財政",
+  "半導体",
+  "エネルギー",
+  "business",
+  "market",
+  "markets",
+  "economy",
+  "economic",
+  "finance",
+  "financial",
+  "stock",
+  "stocks",
+  "inflation",
+  "interest rate",
+  "tariff",
+  "trade",
+  "earnings",
+];
+
+const GENERAL_EXCLUDE_FOR_ECONOMY = [
+  "スポーツ",
+  "サッカー",
+  "野球",
+  "芸能",
+  "エンタメ",
+  "事件",
+  "事故",
+  "天気",
+  "将棋",
+];
+
 // ニュースソースはここだけを見れば追加・削除できるように集約しています。
-// カテゴリ2は「経済専用 RSS が確認できるものだけ」を採用し、
-// 総合系 RSS はカテゴリ3に寄せて混在を防ぎます。
 export const NEWS_CATEGORIES: NewsCategoryConfig[] = [
   {
     id: "reuters-economy",
     label: "ロイター経済",
     description: "海外経済ニュースを日本語に翻訳して要点を確認できます。",
+    filterRule: {
+      includeKeywords: ECONOMY_KEYWORDS,
+    },
     sources: [
       {
         id: "cnbc-business",
@@ -51,6 +111,10 @@ export const NEWS_CATEGORIES: NewsCategoryConfig[] = [
     id: "japan-economy",
     label: "日本各紙経済",
     description: "日本の経済関連ニュースを媒体横断で一覧できます。",
+    filterRule: {
+      includeKeywords: ECONOMY_KEYWORDS,
+      excludeKeywords: GENERAL_EXCLUDE_FOR_ECONOMY,
+    },
     sources: [
       {
         id: "asahi-business",
