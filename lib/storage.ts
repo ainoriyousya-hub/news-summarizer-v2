@@ -12,6 +12,7 @@ export async function saveDailyNews(data: DailyNewsData) {
 
   await put(pathname, JSON.stringify(data, null, 2), {
     access: "private",
+    allowOverwrite: true,
     addRandomSuffix: false,
     contentType: "application/json; charset=utf-8",
     token: getBlobReadWriteToken(),
